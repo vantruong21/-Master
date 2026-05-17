@@ -1,0 +1,66 @@
+{
+  "title": "N5 Kanji Basic (一〜十)",
+  "description": "Bộ thẻ ghi nhớ các chữ Kanji từ số 1 đến số 10 ở cấp độ N5 cơ bản nhất.",
+  "cards": [
+    {
+      "prompt": "一",
+      "answer": "ichi",
+      "hint": "Số một (One)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "二",
+      "answer": "ni",
+      "hint": "Số hai (Two)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "三",
+      "answer": "san",
+      "hint": "Số ba (Three)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "四",
+      "answer": "yon",
+      "hint": "Số bốn (Four)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "五",
+      "answer": "go",
+      "hint": "Số năm (Five)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "六",
+      "answer": "roku",
+      "hint": "Số sáu (Six)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "七",
+      "answer": "nana",
+      "hint": "Số bảy (Seven)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "八",
+      "answer": "hachi",
+      "hint": "Số tám (Eight)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "九",
+      "answer": "kyuu",
+      "hint": "Số chín (Nine)",
+      "type": "KANJI"
+    },
+    {
+      "prompt": "十",
+      "answer": "juu",
+      "hint": "Số mười (Ten)",
+      "type": "KANJI"
+    }
+  ]
+}

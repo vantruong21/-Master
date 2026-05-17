@@ -1,0 +1,54 @@
+{
+  "title": "N5 Vocab Greetings",
+  "description": "Các từ vựng chào hỏi giao tiếp cơ bản hàng ngày trong tiếng Nhật cấp độ N5.",
+  "cards": [
+    {
+      "prompt": "こんにちは",
+      "answer": "konnichiwa",
+      "hint": "Xin chào (Chào buổi chiều)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "ありがとう",
+      "answer": "arigatou",
+      "hint": "Cảm ơn (Cảm ơn dạng thân mật)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "さようなら",
+      "answer": "sayounara",
+      "hint": "Tạm biệt (Goodbye)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "おはよう",
+      "answer": "ohayou",
+      "hint": "Chào buổi sáng (Dạng thân mật)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "こんばんは",
+      "answer": "konbanwa",
+      "hint": "Chào buổi tối (Good evening)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "おやすみ",
+      "answer": "oyasumi",
+      "hint": "Chúc ngủ ngon (Dạng thân mật)",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "はじめまして",
+      "answer": "hajimemashite",
+      "hint": "Rất vui được gặp bạn lần đầu",
+      "type": "VOCAB"
+    },
+    {
+      "prompt": "すみません",
+      "answer": "sumimasen",
+      "hint": "Xin lỗi / Cho tôi hỏi (Excuse me)",
+      "type": "VOCAB"
+    }
+  ]
+}

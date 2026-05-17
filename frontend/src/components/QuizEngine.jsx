@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
+const LiquidBackground = () => (
+  <div className="liquid-bg-container">
+    <div className="liquid-blob blob-1"></div>
+    <div className="liquid-blob blob-2"></div>
+    <div className="liquid-blob blob-3"></div>
+    <div className="liquid-blob blob-4"></div>
+  </div>
+);
+
 const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
@@ -95,32 +104,33 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
         }
         setIsTransitioning(false);
       }, 200);
-    }, 600);
+    }, 1200); // 1.2s to review feedback
   };
 
   if (!currentQuestion) return null;
 
-  const progressPercent = ((currentIndex + 1) / questions.length) * 100;
+  const progressPercent = (currentIndex / questions.length) * 100;
 
   return (
-    <div className={`min-h-screen bg-zen-white flex flex-col items-center justify-center p-8 transition-all duration-200 ${isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+    <div className={`min-h-screen flex flex-col items-center justify-center p-8 transition-all duration-200 relative overflow-hidden ${isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+      <LiquidBackground />
 
       {/* Confirm Exit Modal */}
       {showConfirmExit && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center modal-backdrop" style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}>
-          <div className="bg-white border border-zen-accent p-10 max-w-sm w-full animate-scale-in text-center space-y-6">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-zen-muted">⚠ Confirm Exit</p>
-            <p className="text-sm font-light text-zen-black">Your progress ({currentIndex}/{questions.length}) will be lost.</p>
-            <div className="flex space-x-3">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center modal-backdrop p-4" style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}>
+          <div className="glass-panel p-10 max-w-sm w-full animate-scale-in text-center space-y-6">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-red-500 font-bold">⚠ Confirm Exit</p>
+            <p className="text-sm font-semibold text-zen-black">Your progress ({currentIndex}/{questions.length}) will be lost.</p>
+            <div className="flex space-x-4 pt-2">
               <button
                 onClick={() => setShowConfirmExit(false)}
-                className="flex-1 py-3 border border-zen-accent text-[10px] uppercase tracking-[0.2em] text-zen-muted hover:text-zen-black hover:border-zen-black transition-all"
+                className="flex-1 py-3 glass-btn text-[10px] uppercase tracking-[0.2em] font-bold"
               >
                 Continue
               </button>
               <button
                 onClick={onBack}
-                className="flex-1 py-3 bg-zen-black text-white text-[10px] uppercase tracking-[0.2em] btn-magnetic"
+                className="flex-1 py-3 glass-btn-danger text-[10px] uppercase tracking-[0.2em] font-bold"
               >
                 Exit Quiz
               </button>
@@ -129,61 +139,66 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
         </div>
       )}
 
-      <div className="w-full max-w-2xl space-y-12 animate-fade-in-up">
+      <div className="w-full max-w-2xl space-y-12 animate-fade-in-up z-10">
         
         {/* Exit Button + Progress */}
         <div>
           <button
             onClick={() => setShowConfirmExit(true)}
-            className="hover-underline text-[10px] uppercase tracking-[0.2em] text-zen-muted hover:text-zen-black transition-colors duration-300 mb-4 inline-block"
+            className="glass-link text-[10px] uppercase tracking-[0.2em] text-zen-black/60 hover:text-zen-black transition-colors duration-300 mb-4 inline-block font-bold cursor-pointer"
           >
             ← Exit
           </button>
           <div className="flex justify-between items-end">
-            <div className="space-y-2 flex-1 mr-8">
+            <div className="space-y-3 flex-1 mr-8">
               <div className="flex justify-between items-center">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-zen-muted">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-zen-black/60 font-bold">
                   {currentIndex + 1} / {questions.length}
                 </p>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-zen-accent">
-                {mode === 'GENIUS' ? `Genius · ${currentInputType === 'TYPING' ? '⌨ Type' : '◉ Pick'}` : mode}
-              </p>
+                {mode === 'GENIUS' && (
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-zen-black/60 font-bold">
+                    ⚡ {currentInputType === 'TYPING' ? '⌨ Type' : '◉ Pick'}
+                  </p>
+                )}
+              </div>
+              <div className="w-full h-3 bg-black/10 rounded-full overflow-hidden p-0.5 border border-white/40">
+                <div 
+                  className="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out" 
+                  style={{ width: `${progressPercent}%` }}
+                ></div>
+              </div>
             </div>
-            <div className="w-full h-[2px] bg-zen-accent overflow-hidden">
-              <div className="h-full bg-zen-black progress-fill" style={{ width: `${progressPercent}%` }}></div>
-            </div>
-          </div>
-          {mode === 'GENIUS' && (
-            <div className={`text-5xl font-thin tabular-nums transition-all duration-300 ${
-              timeLeft <= 3 ? 'text-red-400 animate-countdown' : 'text-zen-black'
-            }`}>
-              {timeLeft}
-            </div>
-          )}
+            {mode === 'GENIUS' && (
+              <div className={`text-5xl font-extralight tabular-nums transition-all duration-300 ${
+                timeLeft <= 3 ? 'text-red-500 animate-pulse font-bold' : 'text-zen-black'
+              }`}>
+                {timeLeft}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Prompt Card */}
-        <div className={`bg-white border p-12 md:p-16 text-center shadow-sm transition-all duration-500 ${
-          feedback === 'correct' ? 'border-green-300 bg-green-50/30' :
-          feedback === 'wrong' ? 'border-red-300 bg-red-50/30' :
-          'border-zen-accent'
+        <div className={`glass-panel p-12 md:p-16 text-center shadow-xl transition-all duration-500 ${
+          feedback === 'correct' ? 'border-emerald-300 bg-emerald-500/20 backdrop-blur-md' :
+          feedback === 'wrong' ? 'border-red-300 bg-red-500/20 backdrop-blur-md' :
+          ''
         }`}>
-          <span className="text-[9px] uppercase tracking-[0.4em] text-zen-accent mb-6 block">
+          <span className="text-[9px] uppercase tracking-[0.4em] text-zen-black/60 font-bold mb-6 block">
             {currentQuestion.type || 'QUESTION'}
           </span>
           <h2 className="text-5xl md:text-7xl font-light text-zen-black tracking-tight leading-none">
             {currentQuestion.prompt}
           </h2>
-          {currentQuestion.hint && (
-            <p className="mt-8 text-sm text-zen-muted font-light italic animate-fade-in">
+          {currentQuestion.hint && !feedback && (
+            <p className="mt-8 text-xs text-zen-black/60 font-medium italic animate-fade-in">
               💡 {currentQuestion.hint}
             </p>
           )}
           
           {/* Feedback indicator */}
           {feedback && (
-            <div className={`mt-6 text-sm font-light animate-fade-in ${feedback === 'correct' ? 'text-green-500' : 'text-red-400'}`}>
+            <div className={`mt-8 text-sm font-bold animate-fade-in ${feedback === 'correct' ? 'text-emerald-600' : 'text-red-600'}`}>
               {feedback === 'correct' ? '✓ Correct!' : `✕ Answer: ${currentQuestion.answer}`}
             </div>
           )}
@@ -200,19 +215,19 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && userInput.trim() && handleAnswer(userInput)}
                   placeholder="Type your answer..."
-                  className="w-full bg-transparent border-b-2 border-zen-accent py-4 text-2xl font-light focus:outline-none focus:border-zen-black transition-all duration-300 text-center"
+                  className="w-full glass-input px-6 py-4 text-2xl font-light focus:outline-none transition-all duration-300 text-center rounded-2xl text-zen-black placeholder-black/30"
                 />
-                <p className="text-center mt-4 text-[9px] text-zen-accent uppercase tracking-[0.3em]">
+                <p className="text-center mt-4 text-[9px] text-zen-black/60 uppercase tracking-[0.3em] font-bold">
                   Press Enter ↵
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {options.map((option, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleAnswer(option)}
-                    className="option-btn p-5 bg-white border border-zen-accent text-sm font-light text-left hover:bg-zen-gray cursor-pointer"
+                    className="glass-panel glass-panel-hover p-5 text-sm font-semibold text-center hover:scale-[1.02] cursor-pointer text-zen-black active:scale-95"
                   >
                     {option}
                   </button>

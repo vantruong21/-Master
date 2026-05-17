@@ -50,7 +50,6 @@ public class StudySetController {
     }
 
     @DeleteMapping("/{id}")
-    @SuppressWarnings("null")
     public ResponseEntity<?> deleteStudySet(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().build();

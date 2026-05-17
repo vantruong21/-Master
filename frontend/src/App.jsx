@@ -6,6 +6,15 @@ import QuizResults from './components/QuizResults';
 import StatsPage from './components/StatsPage';
 import AuthPage from './components/AuthPage';
 
+const LiquidBackground = () => (
+  <div className="liquid-bg-container">
+    <div className="liquid-blob blob-1"></div>
+    <div className="liquid-blob blob-2"></div>
+    <div className="liquid-blob blob-3"></div>
+    <div className="liquid-blob blob-4"></div>
+  </div>
+);
+
 function App() {
   // Auth state
   const [user, setUser] = useState(null); // { username, role }
@@ -147,12 +156,15 @@ function App() {
   // Auth loading screen
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-zen-white flex items-center justify-center">
-        <div className="space-y-4 text-center animate-fade-in">
-          <div className="w-12 h-12 border border-zen-accent rounded-full mx-auto animate-spin" style={{ borderTopColor: '#111' }}></div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-zen-muted">Restoring session...</p>
+      <>
+        <LiquidBackground />
+        <div className="min-h-screen flex items-center justify-center p-8">
+          <div className="glass-panel p-12 text-center animate-fade-in space-y-4 max-w-sm w-full">
+            <div className="w-12 h-12 border-2 border-black/10 border-t-black rounded-full mx-auto animate-spin"></div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-zen-black/60 font-semibold">Restoring session...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -196,7 +208,9 @@ function App() {
 
   // Library view (default)
   return (
-    <div className="min-h-screen bg-zen-white flex flex-col">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      <LiquidBackground />
+
       <Navbar
         user={user}
         onImportClick={() => setIsImportModalOpen(true)}
@@ -205,44 +219,44 @@ function App() {
         onLogout={handleLogout}
       />
       
-      <main className="flex-1 mt-16 p-8 md:p-16 max-w-7xl mx-auto w-full">
+      <main className="flex-1 mt-16 p-8 md:p-16 max-w-7xl mx-auto w-full z-10">
         {/* Hero Header */}
         <header className="pt-8 pb-16 space-y-4 animate-fade-in-up">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-zen-muted mb-3 animate-fade-in stagger-1">Your Collection</p>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-zen-black/60 font-bold mb-3 animate-fade-in stagger-1">academic portfolio</p>
               <h2 className="text-5xl md:text-6xl font-extralight text-zen-black tracking-tighter leading-none">
-                Library
+                Repository
               </h2>
             </div>
-            <p className="text-zen-muted text-xs font-light hidden md:block">
+            <p className="text-zen-black/60 text-xs font-medium hidden md:block">
               {studySets.length} {studySets.length === 1 ? 'set' : 'sets'} available
             </p>
           </div>
-          <div className="w-full h-px bg-gradient-to-r from-zen-black via-zen-accent to-transparent mt-6"></div>
+          <div className="w-full h-0.5 bg-gradient-to-r from-zen-black via-white/50 to-transparent mt-6"></div>
         </header>
-
+ 
         {/* Content */}
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <div className="space-y-4 text-center animate-fade-in">
-              <div className="w-12 h-12 border border-zen-accent rounded-full mx-auto animate-spin" style={{ borderTopColor: '#111' }}></div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-zen-muted">Loading sets...</p>
+            <div className="glass-panel p-12 space-y-4 text-center animate-fade-in max-w-xs w-full">
+              <div className="w-12 h-12 border-2 border-black/10 border-t-black rounded-full mx-auto animate-spin"></div>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-zen-black/60 font-semibold">Loading sets...</p>
             </div>
           </div>
         ) : (!studySets || studySets.length === 0) ? (
-          <div className="flex flex-col items-center justify-center py-32 animate-fade-in-up">
-            <div className="w-20 h-20 border border-dashed border-zen-accent rounded-full flex items-center justify-center mb-8 animate-float">
-              <span className="text-3xl">空</span>
+          <div className="glass-panel p-16 flex flex-col items-center justify-center py-24 animate-fade-in-up max-w-2xl mx-auto text-center">
+            <div className="w-20 h-20 border border-dashed border-black/20 rounded-full flex items-center justify-center mb-8 animate-float bg-white/20">
+              <span className="text-3xl font-light text-zen-black/80">空</span>
             </div>
-            <p className="text-zen-muted font-light text-sm mb-2">Your library is empty</p>
-            <p className="text-zen-accent text-xs mb-8">
+            <p className="text-zen-black font-semibold text-base mb-2">Your repository is empty</p>
+            <p className="text-zen-black/60 text-xs mb-8 max-w-md">
               {user.role === 'ADMIN' ? 'Import a JSON study set to begin learning' : 'Ask an admin to import study sets'}
             </p>
             {user.role === 'ADMIN' && (
               <button
                 onClick={() => setIsImportModalOpen(true)}
-                className="btn-magnetic px-10 py-3 bg-zen-black text-white text-[10px] uppercase tracking-[0.2em]"
+                className="px-10 py-3.5 glass-btn text-[10px] uppercase tracking-[0.2em] font-bold"
               >
                 Import First Set
               </button>
@@ -253,12 +267,12 @@ function App() {
             {studySets.map((set, index) => (
               <div
                 key={set.id}
-                className={`card-hover group p-8 bg-white border border-zen-accent flex flex-col justify-between aspect-square animate-fade-in-up stagger-${Math.min(index + 1, 6)}`}
+                className={`glass-panel glass-panel-hover group p-8 flex flex-col justify-between aspect-square animate-fade-in-up stagger-${Math.min(index + 1, 6)}`}
               >
                 {/* Card Top */}
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <span className="text-[10px] text-zen-muted uppercase tracking-[0.3em]">
+                    <span className="text-[10px] text-zen-black/60 font-bold uppercase tracking-[0.3em]">
                       {set.questions?.length || 0} cards
                     </span>
                     {user?.role === 'ADMIN' ? (
@@ -267,37 +281,37 @@ function App() {
                           e.stopPropagation();
                           handleDeleteSet(set.id, set.title);
                         }}
-                        className="text-[9px] uppercase tracking-[0.2em] text-red-400 hover:text-red-600 transition-colors duration-300 cursor-pointer font-medium"
+                        className="text-[9px] uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition-colors duration-300 cursor-pointer font-bold"
                       >
                         Delete
                       </button>
                     ) : (
-                      <span className="w-2 h-2 rounded-full bg-zen-accent group-hover:bg-green-400 transition-colors duration-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50"></span>
                     )}
                   </div>
-                  <h3 className="text-2xl font-light text-zen-black mb-3 group-hover:tracking-tight transition-all duration-300">
+                  <h3 className="text-2xl font-light text-zen-black mb-3 tracking-tight group-hover:translate-x-1 transition-transform duration-300">
                     {set.title}
                   </h3>
-                  <p className="text-zen-muted text-sm font-light line-clamp-2 leading-relaxed">{set.description}</p>
+                  <p className="text-zen-black/60 text-sm font-light line-clamp-2 leading-relaxed">{set.description}</p>
                 </div>
                 
                 {/* Card Bottom - Mode Selection */}
-                <div className="pt-6 border-t border-zen-accent/50 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+                <div className="pt-6 border-t border-white/50 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
                   <button
                     onClick={() => handleStartQuiz(set, 'TYPING')}
-                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-muted hover:text-zen-black py-1 pl-0 border-l-0 transition-all"
+                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-black/60 hover:text-zen-black font-semibold py-1.5 cursor-pointer"
                   >
                     ⌨ Typing Mode
                   </button>
                   <button
                     onClick={() => handleStartQuiz(set, 'MCQ')}
-                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-muted hover:text-zen-black py-1 pl-0 border-l-0 transition-all"
+                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-black/60 hover:text-zen-black font-semibold py-1.5 cursor-pointer"
                   >
                     ◉ Multiple Choice
                   </button>
                   <button
                     onClick={() => handleStartQuiz(set, 'GENIUS')}
-                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-black font-medium py-1 pl-0 border-l-0 transition-all"
+                    className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-black font-bold py-1.5 cursor-pointer"
                   >
                     ⚡ Genius Mode
                   </button>
@@ -309,8 +323,8 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center border-t border-zen-accent/30">
-        <p className="text-[9px] uppercase tracking-[0.4em] text-zen-accent">日本語 — Built for mastery</p>
+      <footer className="py-8 text-center border-t border-white/30 z-10">
+        <p className="text-[9px] uppercase tracking-[0.4em] text-zen-black/40 font-semibold">日本語 — Built for mastery</p>
       </footer>
 
       {user.role === 'ADMIN' && (
