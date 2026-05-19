@@ -1,14 +1,4 @@
 @import "tailwindcss";
-
-@theme {
-  --color-zen-white: #fafafa;
-  --color-zen-black: #111111;
-  --color-zen-gray: #f0f0f0;
-  --color-zen-accent: rgba(255, 255, 255, 0.3);
-  --color-zen-hover: rgba(255, 255, 255, 0.55);
-  --color-zen-muted: #666666;
-}
-
 /* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700&family=Noto+Sans+JP:wght@100;300;400;500;700&display=swap');
 
