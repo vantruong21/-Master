@@ -87,6 +87,8 @@ CREATE TABLE `quiz_details` (
 -- SAMPLE DATA FOR TESTING
 -- =============================================================================
 
--- Seed User (password hashed is 'password' or development defaults)
+-- Seed Users (password: student is 'password', admin is 'admin123', guest1 is 'guest123')
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `role`) VALUES
-(1, 'student', '$2a$10$8.UnVuG9HHgffUDAlk8GPuOC6r0.z.t/6tq1V9mF75v8eD42044675', 'student@japanese.edu', 'USER');
+(1, 'student', '$2a$10$8.UnVuG9HHgffUDAlk8GPuOC6r0.z.t/6tq1V9mF75v8eD42044675', 'student@japanese.edu', 'USER'),
+(2, 'admin', '$2a$10$SQzeLXgpbhyB4n/LMdRwmeqAqpDAJH6couq6LrNPYZjvjKYX6M6ty', 'admin@japanese.edu', 'ADMIN'),
+(3, 'guest1', '$2a$10$A9JkjDxAlX/P7dX35swTNOqeKQQUOzLH.mhz0TXhQ61G6PBva5Nte', 'guest1@japanese.edu', 'GUEST');
