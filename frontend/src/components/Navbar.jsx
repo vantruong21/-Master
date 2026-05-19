@@ -23,16 +23,16 @@ const Navbar = ({ user, onImportClick, onLibraryClick, onStatsClick, onLogout })
 
   return (
     <nav className={`fixed top-0 w-full h-16 glass-nav z-50 transition-all duration-500 ${scrolled ? 'border-b border-white/40 shadow-sm' : 'border-b border-transparent'}`}>
-      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-8 md:px-16">
+      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-4 md:px-16">
         {/* Logo */}
-        <a href="/" className="group cursor-pointer no-underline">
-          <span className="text-2xl font-bold tracking-tight text-zen-black group-hover:scale-105 inline-block transition-transform duration-300">
+        <a href="/" className="group cursor-pointer no-underline flex-shrink-0">
+          <span className="text-lg md:text-2xl font-bold tracking-tight text-zen-black group-hover:scale-105 inline-block transition-transform duration-300">
             日本語
           </span>
         </a>
 
         {/* Navigation */}
-        <div className="flex items-center space-x-10 text-[10px] uppercase tracking-[0.2em]">
+        <div className="flex items-center space-x-3 sm:space-x-6 md:space-x-10 text-[9px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em]">
           {isAdmin && (
             <button
               onClick={onImportClick}

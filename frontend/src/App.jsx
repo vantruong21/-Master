@@ -268,7 +268,7 @@ function App() {
             {studySets.map((set, index) => (
               <div
                 key={set.id}
-                className={`glass-panel glass-panel-hover group p-8 flex flex-col justify-between aspect-square animate-fade-in-up stagger-${Math.min(index + 1, 6)}`}
+                className={`glass-panel glass-panel-hover group p-8 flex flex-col justify-between md:aspect-square aspect-auto min-h-[300px] animate-fade-in-up stagger-${Math.min(index + 1, 6)}`}
               >
                 {/* Card Top */}
                 <div>
@@ -297,7 +297,7 @@ function App() {
                 </div>
                 
                 {/* Card Bottom - Mode Selection */}
-                <div className="pt-6 border-t border-white/50 flex flex-col space-y-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                <div className="pt-6 border-t border-white/50 flex flex-col space-y-3 opacity-100 translate-y-0 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0 transition-all duration-500">
                   <button
                     onClick={() => handleStartQuiz(set, 'TYPING')}
                     className="option-btn text-[10px] text-left uppercase tracking-[0.15em] text-zen-black/60 hover:text-zen-black font-semibold py-1.5 cursor-pointer"
