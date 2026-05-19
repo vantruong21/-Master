@@ -117,8 +117,8 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
 
       {/* Confirm Exit Modal */}
       {showConfirmExit && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center modal-backdrop p-4" style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}>
-          <div className="glass-panel p-10 max-w-sm w-full animate-scale-in text-center space-y-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center modal-backdrop p-4" style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}>
+          <div className="bg-[#fafafa] border border-black/10 shadow-2xl rounded-[24px] p-10 max-w-sm w-full animate-scale-in text-center space-y-6">
             <p className="text-[10px] uppercase tracking-[0.3em] text-red-500 font-bold">⚠ Confirm Exit</p>
             <p className="text-sm font-semibold text-zen-black">Your progress ({currentIndex}/{questions.length}) will be lost.</p>
             <div className="flex space-x-4 pt-2">
