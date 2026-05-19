@@ -4,11 +4,6 @@
 -- Character Set: utf8mb4 (Fully supports Japanese Kanji, Hiragana, Katakana & Emojis)
 -- =============================================================================
 
-CREATE DATABASE IF NOT EXISTS `j_custom_deck` 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_unicode_ci;
-
-USE `j_custom_deck`;
 
 -- Disable foreign key checks temporarily to drop tables in any order
 SET FOREIGN_KEY_CHECKS = 0;
