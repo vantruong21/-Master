@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 const StatsPage = ({ onBack }) => {
   const [stats, setStats] = useState(null);
@@ -8,9 +9,9 @@ const StatsPage = ({ onBack }) => {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8080/api/quiz/stats').then(r => r.json()),
-      fetch('http://localhost:8080/api/quiz/sessions').then(r => r.json()),
-      fetch('http://localhost:8080/api/quiz/weak-points').then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/quiz/stats`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/quiz/sessions`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/quiz/weak-points`).then(r => r.json()),
     ]).then(([statsData, sessionsData, weakData]) => {
       setStats(statsData);
       setSessions(Array.isArray(sessionsData) ? sessionsData : []);

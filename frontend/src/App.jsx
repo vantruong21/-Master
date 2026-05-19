@@ -5,6 +5,7 @@ import QuizEngine from './components/QuizEngine';
 import QuizResults from './components/QuizResults';
 import StatsPage from './components/StatsPage';
 import AuthPage from './components/AuthPage';
+import { API_BASE_URL } from './config';
 
 const LiquidBackground = () => (
   <div className="liquid-bg-container">
@@ -39,7 +40,7 @@ function App() {
     
     if (savedToken && savedUser) {
       // Verify token is still valid
-      fetch('http://localhost:8080/api/auth/me', {
+      fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${savedToken}` }
       }).then(res => {
         if (res.ok) return res.json();
@@ -66,7 +67,7 @@ function App() {
   const fetchStudySets = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/study-sets');
+      const response = await fetch(`${API_BASE_URL}/api/study-sets`);
       if (!response.ok) throw new Error('API request failed');
       const data = await response.json();
       setStudySets(Array.isArray(data) ? data : []);
@@ -109,7 +110,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/study-sets/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/study-sets/${id}`, {
         method: 'DELETE',
         headers: authHeaders()
       });
@@ -131,7 +132,7 @@ function App() {
     setView('RESULTS');
 
     try {
-      await fetch('http://localhost:8080/api/quiz/session', {
+      await fetch(`${API_BASE_URL}/api/quiz/session`, {
         method: 'POST',
         headers: authHeaders(),
         body: JSON.stringify({
@@ -332,7 +333,7 @@ function App() {
           isOpen={isImportModalOpen} 
           onClose={() => setIsImportModalOpen(false)} 
           onImport={(data) => {
-            fetch('http://localhost:8080/api/study-sets/import', {
+            fetch(`${API_BASE_URL}/api/study-sets/import`, {
               method: 'POST',
               headers: authHeaders(),
               body: JSON.stringify(data),
