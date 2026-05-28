@@ -63,6 +63,7 @@ public class StudySetController {
             if (newDescription != null) {
                 existing.setDescription(newDescription);
             }
+            @SuppressWarnings("null")
             StudySet updated = studySetRepository.save(existing);
             return ResponseEntity.ok(updated);
         }).orElse(ResponseEntity.notFound().build());
