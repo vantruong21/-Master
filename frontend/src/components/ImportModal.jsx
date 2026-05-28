@@ -5,6 +5,7 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
   const [jsonData, setJsonData] = useState('');
   const [error, setError] = useState('');
   const [isClosing, setIsClosing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -43,7 +44,7 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       const parsed = JSON.parse(jsonData);
       if (!parsed.title || !parsed.cards || !Array.isArray(parsed.cards)) {
@@ -51,9 +52,16 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
         return;
       }
       setError('');
-      onImport(parsed);
+      setLoading(true);
+      await onImport(parsed);
     } catch (err) {
-      setError('Invalid JSON format. Please check your syntax.');
+      if (err.name === 'SyntaxError') {
+        setError('Invalid JSON format. Please check your syntax.');
+      } else {
+        setError('Import failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,13 +145,17 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
             </p>
             <button
               onClick={handleSubmit}
-              disabled={!jsonData.trim()}
-              className={`px-10 py-3.5 glass-btn text-[10px] uppercase tracking-[0.2em] font-bold ${jsonData.trim()
-                ? ''
-                : 'opacity-40 cursor-not-allowed'
-                }`}
+              disabled={!jsonData.trim() || loading}
+              className={`px-10 py-3.5 glass-btn text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-200 ${
+                !jsonData.trim() || loading ? 'opacity-40 cursor-not-allowed' : ''
+              }`}
             >
-              Initialize Set
+              {loading ? (
+                <span className="flex items-center space-x-2">
+                  <span className="inline-block w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
+                  <span>Importing...</span>
+                </span>
+              ) : 'Initialize Set'}
             </button>
           </div>
         </div>

@@ -15,6 +15,7 @@ const AuthPage = ({ onAuth }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -111,15 +112,24 @@ const AuthPage = ({ onAuth }) => {
               <label className="text-[9px] uppercase tracking-[0.3em] text-zen-black/60 font-bold block">
                 Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={4}
-                className="w-full glass-input px-4 py-3 text-sm font-light focus:outline-none transition-all duration-300 placeholder-black/30 text-zen-black"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={4}
+                  className="w-full glass-input px-4 py-3 pr-16 text-sm font-light focus:outline-none transition-all duration-300 placeholder-black/30 text-zen-black"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(p => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[8px] uppercase tracking-[0.15em] font-bold text-zen-black/40 hover:text-zen-black/80 transition-colors duration-200 cursor-pointer px-2 py-1"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
             {/* Error */}

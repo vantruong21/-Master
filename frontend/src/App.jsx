@@ -27,6 +27,13 @@ function App() {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [studySets, setStudySets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('newest');
+
+  // Edit study set modal state
+  const [editingSet, setEditingSet] = useState(null); // { id, title, description }
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
   
   const [activeSet, setActiveSet] = useState(null);
   const [quizMode, setQuizMode] = useState('TYPING');
@@ -105,16 +112,12 @@ function App() {
   };
 
   const handleDeleteSet = async (id, title) => {
-    if (!window.confirm(`Are you sure you want to delete "${title}"? This will also delete all associated quiz history.`)) {
-      return;
-    }
-
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
     try {
       const response = await fetch(`${API_BASE_URL}/api/study-sets/${id}`, {
         method: 'DELETE',
-        headers: authHeaders()
+        headers: authHeaders(),
       });
-
       if (response.ok) {
         fetchStudySets();
       } else {
@@ -123,6 +126,34 @@ function App() {
     } catch (error) {
       console.error('Error deleting study set:', error);
       alert('Failed to delete study set: Network error.');
+    }
+  };
+
+  const handleOpenEdit = (set) => {
+    setEditingSet(set);
+    setEditTitle(set.title);
+    setEditDescription(set.description || '');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingSet || !editTitle.trim()) return;
+    setEditLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/study-sets/${editingSet.id}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ title: editTitle, description: editDescription }),
+      });
+      if (res.ok) {
+        fetchStudySets();
+        setEditingSet(null);
+      } else {
+        alert('Failed to update study set.');
+      }
+    } catch (err) {
+      alert('Network error.');
+    } finally {
+      setEditLoading(false);
     }
   };
 
@@ -222,7 +253,7 @@ function App() {
       
       <main className="flex-1 mt-16 p-8 md:p-16 max-w-7xl mx-auto w-full z-10">
         {/* Hero Header */}
-        <header className="pt-8 pb-16 space-y-4 animate-fade-in-up">
+        <header className="pt-8 pb-10 space-y-4 animate-fade-in-up">
           <div className="flex items-end justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-[0.4em] text-zen-black/60 font-bold mb-3 animate-fade-in stagger-1">academic portfolio</p>
@@ -230,9 +261,22 @@ function App() {
                 Repository
               </h2>
             </div>
-            <p className="text-zen-black/60 text-xs font-medium hidden md:block">
-              {studySets.length} {studySets.length === 1 ? 'set' : 'sets'} available
-            </p>
+            <div className="flex items-center space-x-4">
+              <p className="text-zen-black/60 text-xs font-medium hidden md:block">
+                {studySets.length} {studySets.length === 1 ? 'set' : 'sets'} available
+              </p>
+              {/* Sort Selector */}
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="text-[9px] uppercase tracking-[0.15em] font-bold text-zen-black/60 bg-white/40 border border-black/10 rounded-xl px-3 py-2 focus:outline-none cursor-pointer hover:bg-white/60 transition-all duration-200"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+              </select>
+            </div>
           </div>
           <div className="w-full h-0.5 bg-gradient-to-r from-zen-black via-white/50 to-transparent mt-6"></div>
         </header>
@@ -265,7 +309,14 @@ function App() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {studySets.map((set, index) => (
+            {(() => {
+              const sorted = [...studySets].sort((a, b) => {
+                if (sortBy === 'oldest') return a.id - b.id;
+                if (sortBy === 'az') return a.title.localeCompare(b.title);
+                if (sortBy === 'za') return b.title.localeCompare(a.title);
+                return b.id - a.id; // newest
+              });
+              return sorted.map((set, index) => (
               <div
                 key={set.id}
                 className={`glass-panel glass-panel-hover group p-8 flex flex-col justify-between md:aspect-square aspect-auto min-h-[300px] animate-fade-in-up stagger-${Math.min(index + 1, 6)}`}
@@ -277,15 +328,26 @@ function App() {
                       {set.questions?.length || 0} cards
                     </span>
                     {user?.role === 'ADMIN' ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteSet(set.id, set.title);
-                        }}
-                        className="text-[9px] uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition-colors duration-300 cursor-pointer font-bold"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenEdit(set);
+                          }}
+                          className="text-[9px] uppercase tracking-[0.2em] text-zen-black/40 hover:text-zen-black transition-colors duration-300 cursor-pointer font-bold"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteSet(set.id, set.title);
+                          }}
+                          className="text-[9px] uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition-colors duration-300 cursor-pointer font-bold"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     ) : (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50"></span>
                     )}
@@ -318,7 +380,8 @@ function App() {
                   </button>
                 </div>
               </div>
-            ))}
+              ));
+            })()}
           </div>
         )}
       </main>
@@ -333,7 +396,7 @@ function App() {
           isOpen={isImportModalOpen} 
           onClose={() => setIsImportModalOpen(false)} 
           onImport={(data) => {
-            fetch(`${API_BASE_URL}/api/study-sets/import`, {
+            return fetch(`${API_BASE_URL}/api/study-sets/import`, {
               method: 'POST',
               headers: authHeaders(),
               body: JSON.stringify(data),
@@ -342,14 +405,64 @@ function App() {
                 fetchStudySets();
                 setIsImportModalOpen(false);
               } else {
-                alert('Import failed: Backend error.');
+                throw new Error('Backend error');
               }
-            }).catch(err => {
-              alert('Import failed: Network error.');
-              console.error(err);
             });
           }}
         />
+      )}
+
+      {/* Edit Study Set Modal */}
+      {editingSet && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setEditingSet(null)}
+        >
+          <div
+            className="bg-[#fafafa] border border-black/10 shadow-2xl rounded-[24px] p-10 max-w-sm w-full animate-scale-in space-y-5"
+            onClick={e => e.stopPropagation()}
+          >
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-zen-black">✏ Edit Study Set</p>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[9px] uppercase tracking-[0.25em] text-zen-black/60 font-bold block mb-1">Title</label>
+                <input
+                  value={editTitle}
+                  onChange={e => setEditTitle(e.target.value)}
+                  className="w-full glass-input px-4 py-2.5 text-sm font-light focus:outline-none rounded-xl text-zen-black"
+                  placeholder="Study set title"
+                />
+              </div>
+              <div>
+                <label className="text-[9px] uppercase tracking-[0.25em] text-zen-black/60 font-bold block mb-1">Description</label>
+                <textarea
+                  value={editDescription}
+                  onChange={e => setEditDescription(e.target.value)}
+                  className="w-full glass-input px-4 py-2.5 text-sm font-light focus:outline-none rounded-xl text-zen-black resize-none h-20"
+                  placeholder="Optional description"
+                />
+              </div>
+            </div>
+            <div className="flex space-x-3 pt-2">
+              <button
+                onClick={() => setEditingSet(null)}
+                className="flex-1 py-2.5 glass-btn text-[9px] uppercase tracking-[0.2em] font-bold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                disabled={!editTitle.trim() || editLoading}
+                className={`flex-1 py-2.5 glass-btn text-[9px] uppercase tracking-[0.2em] font-bold ${
+                  !editTitle.trim() || editLoading ? 'opacity-40 cursor-not-allowed' : ''
+                }`}
+              >
+                {editLoading ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

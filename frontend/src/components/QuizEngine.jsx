@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 const LiquidBackground = () => (
   <div className="liquid-bg-container">
@@ -19,6 +19,10 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [showConfirmExit, setShowConfirmExit] = useState(false);
+  // Show/hide hint: reset per question
+  const [showHint, setShowHint] = useState(false);
+  // Use a ref to track if answer has already been handled (prevents double-fire)
+  const answeredRef = useRef(false);
 
   // Shuffle the questions once at the beginning of the quiz session
   const questions = useMemo(() => {
@@ -50,6 +54,7 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
     return [currentQuestion.answer, ...distractors].sort(() => 0.5 - Math.random());
   }, [currentIndex, questions, currentQuestion]);
 
+  // Reset state when moving to a new question
   useEffect(() => {
     if (currentInputType === 'MCQ') {
       setOptions(generateOptions());
@@ -57,11 +62,14 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
     if (mode === 'GENIUS') {
       setTimeLeft(10);
     }
+    // Reset hint and answered guard on every new question
+    setShowHint(false);
+    answeredRef.current = false;
   }, [currentIndex, currentInputType, mode, generateOptions]);
 
-  // Timer for Genius Mode
+  // Timer for Genius Mode - only runs when NOT transitioning and no feedback shown
   useEffect(() => {
-    if (mode === 'GENIUS' && timeLeft !== null && !feedback) {
+    if (mode === 'GENIUS' && timeLeft !== null && !feedback && !isTransitioning) {
       if (timeLeft <= 0) {
         handleAnswer(null);
         return;
@@ -69,10 +77,12 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
       const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
       return () => clearInterval(timer);
     }
-  }, [timeLeft, mode, feedback]);
+  }, [timeLeft, mode, feedback, isTransitioning]);
 
   const handleAnswer = (answer) => {
-    if (feedback) return; // Prevent double-click
+    // Guard: prevent double-fire from timer AND feedback state
+    if (answeredRef.current) return;
+    answeredRef.current = true;
 
     const isCorrect = answer !== null && (
       currentInputType === 'TYPING'
@@ -190,10 +200,23 @@ const QuizEngine = ({ studySet, mode, onFinish, onBack }) => {
           <h2 className="text-5xl md:text-7xl font-light text-zen-black tracking-tight leading-none">
             {currentQuestion.prompt}
           </h2>
+
+          {/* Hint Toggle - hidden by default */}
           {currentQuestion.hint && !feedback && (
-            <p className="mt-8 text-xs text-zen-black/60 font-medium italic animate-fade-in">
-              💡 {currentQuestion.hint}
-            </p>
+            <div className="mt-8">
+              {showHint ? (
+                <p className="text-xs text-zen-black/60 font-medium italic animate-fade-in">
+                  💡 {currentQuestion.hint}
+                </p>
+              ) : (
+                <button
+                  onClick={() => setShowHint(true)}
+                  className="text-[9px] uppercase tracking-[0.25em] font-bold text-zen-black/40 hover:text-zen-black/70 transition-colors duration-200 border border-black/10 hover:border-black/20 rounded-full px-4 py-1.5 cursor-pointer"
+                >
+                  💡 Show Hint
+                </button>
+              )}
+            </div>
           )}
           
           {/* Feedback indicator */}

@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/quiz/**").permitAll()
                 // Admin only
                 .requestMatchers(HttpMethod.POST, "/api/study-sets/import").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/study-sets/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/study-sets/**").hasRole("ADMIN")
                 // Authenticated users (both ADMIN and GUEST)
                 .anyRequest().authenticated()

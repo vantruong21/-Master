@@ -49,6 +49,25 @@ public class StudySetController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStudySet(@PathVariable Long id, @RequestBody java.util.Map<String, String> body) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return studySetRepository.findById(id).map(existing -> {
+            String newTitle = body.get("title");
+            String newDescription = body.get("description");
+            if (newTitle != null && !newTitle.isBlank()) {
+                existing.setTitle(newTitle);
+            }
+            if (newDescription != null) {
+                existing.setDescription(newDescription);
+            }
+            StudySet updated = studySetRepository.save(existing);
+            return ResponseEntity.ok(updated);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStudySet(@PathVariable Long id) {
         if (id == null) {
