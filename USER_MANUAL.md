@@ -1,15 +1,11 @@
-# 🇯🇵 CẨM NANG HƯỚNG DẪN SỬ DỤNG - J-CUSTOM DECK
+# 🇯🇵 CẨM NANG HƯỚNG DẪN SỬ DỤNG - 日本語|@nguyenvantruong
 > **Nền tảng Học Tiếng Nhật Thông Minh & Cá Nhân Hóa**
 
-Chào mừng bạn đến với **J-Custom Deck** – ứng dụng học tiếng Nhật hiện đại giúp bạn làm chủ từ vựng, Kanji và ngữ pháp thông qua phương pháp phản xạ nhanh, cá nhân hóa học liệu cùng cơ chế trò chơi hóa (Gamification) đầy hứng khởi.
-
-Tài liệu này được thiết kế dành riêng cho người dùng cuối và các nhà quản lý để khai thác tối đa sức mạnh của hệ thống.
-
----
+Chào mừng bạn đến với **日本語|@nguyenvantruong** – ứng dụng học tiếng Nhật hiện đại giúp bạn làm chủ từ vựng, Kanji và ngữ pháp thông qua phương pháp phản xạ nhanh, cá nhân hóa học liệu cùng cơ chế trò chơi hóa (Gamification) đầy hứng khởi.
 
 ## 🌟 CÁC TÍNH NĂNG NỔI BẬT
 
-### 1. Giao Diện "Zen Premium" Tối Giản
+### 1. Giao Diện Tối Giản
 *   **Thiết kế nhẹ nhàng:** Sử dụng tông màu nhã nhặn, chất liệu kính mờ (Glassmorphism) cùng hiệu ứng chuyển động mượt mà giúp người học tập trung tối đa, không bị xao nhãng.
 *   **Tương thích mọi thiết bị:** Trải nghiệm đồng nhất từ máy tính để bàn, máy tính bảng cho đến điện thoại di động.
 
